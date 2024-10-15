@@ -1,4 +1,4 @@
-package fr.isep.hello;
+package com.example.housenote;
 
 import org.junit.Test;
 
