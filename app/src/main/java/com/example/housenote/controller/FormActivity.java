@@ -27,21 +27,18 @@ import io.realm.Realm;
 
 public class FormActivity extends AppCompatActivity {
 
-    // Initialiser les variables de communication
-
-    private static final String SHARED_PREF_NOTES = "SHARED_PREF_NOTES";
-    private static final String SHARED_PREF_NOTES_ITEM = "SHARED_PREF_NOTES_ITEM";
-    public static final String BUNDLE_EXTRA_NOTES = "BUNDLE_EXTRA_NOTES";
+    // Init note list
     public static List<String> noteList = new ArrayList<>();
 
-    // Initialiser les éléments XML
+    // Init XML elements
     TextView mGreetingTextView;
     EditText mNameEditText;
     EditText mAuthor;
     Button mPlayButton;
 
-    // Initialiser la fonction lors de la création de l'activité
 
+    /** Function that manage the form activity view
+     * (Display note form, Save and redirect to main view) */
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +50,16 @@ public class FormActivity extends AppCompatActivity {
         mPlayButton = findViewById(R.id.main_button_play);
         mAuthor = findViewById(R.id.main_edittext_author);
 
-        // Ne pas rendre le bouton valide si pas de texte
-
+        // Button is unavailable when any text if entered
         mPlayButton.setEnabled(false);
 
+        // Change button accessibility depending on text
         mNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -74,11 +67,11 @@ public class FormActivity extends AppCompatActivity {
             }
         });
 
-        //Initialiser le Realm
-
+        //Init Realm
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
 
+        // Get data and save it as a Notes Entity
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

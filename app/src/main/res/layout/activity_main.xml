@@ -2,26 +2,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#6EC8FB"
+    android:background="@color/background_color"
     android:orientation="vertical">
-
-    <!-- Ajout de la Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notestitle"
         android:textSize="29dp"
-        android:text="HOME NOTES"
+        android:text="My Big Note Pad"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="20dp"/>
 
@@ -40,6 +31,7 @@
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/button_background"
         android:text="Ajouter une note" />
 
 </LinearLayout>

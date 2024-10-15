@@ -3,23 +3,17 @@ package com.example.housenote.controller;
 import static com.example.housenote.controller.FormActivity.noteList;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.housenote.R;
 import com.example.housenote.model.Notes;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -36,13 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            // Traitez les données de retour de l'activité appelée ici
             String result = data.getStringExtra("resultKey");
-
-            // Rafraîchissez votre interface graphique ou effectuez d'autres actions nécessaires
         }
     }
 
+    /** Function that manage the main activity view
+     * (Display all notes, Redirect to note form and Allow to remove a note) */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,18 +43,19 @@ public class MainActivity extends AppCompatActivity {
 
         AddButton = findViewById(R.id.add_button);
 
+        // Load form activity when button is trigger
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gameActivityIntent = new Intent(MainActivity.this, FormActivity.class);
-                startActivity(gameActivityIntent);
+                Intent formActivityIntent = new Intent(MainActivity.this, FormActivity.class);
+                startActivity(formActivityIntent);
             }
         });
 
+        // Init Realm (android storage)
         Realm.init(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
-
-        RealmResults<Notes> notesList = realm.where(Notes.class).findAll();
+        RealmResults<Notes> notesList = realm.where(Notes.class).findAll(); // Get all Notes
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
