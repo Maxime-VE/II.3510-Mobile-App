@@ -1,7 +1,10 @@
 package com.example.housenote.controller;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -48,26 +51,38 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.titleOutput.setText(note.getContenu());
         String Author = note.getUser();
         Log.d("FormActivity", "Author: " + Author);
+        // User name or "Unknown"
         if(!Objects.equals(Author, "")){
             holder.descriptionOutput.setText("par " + note.getUser());
         } else {
-            holder.descriptionOutput.setText("Inconnu");
+            holder.descriptionOutput.setText("Unknown");
         }
 
 
         String formatedTime = DateFormat.getDateTimeInstance().format(note.getDate());
         holder.timeOutput.setText(formatedTime);
 
+        // Trigger Long click on a note
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
                 PopupMenu menu = new PopupMenu(context,v);
-                menu.getMenu().add("DELETE");
+                menu.getMenu().add("Edit");
+                menu.getMenu().add("Delete");
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("DELETE")){
+                        if(item.getTitle().equals("Edit")){
+                            //prepare the note to be edited
+                            String noteId = note.getId();
+
+                            Intent formActivityIntent = new Intent(holder.itemView.getContext(), FormActivity.class); //Use this context instead of activity to run from the adapter
+                            formActivityIntent.putExtra("noteId", noteId); // Add the noteId as an arg
+                            formActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Allow to start Activity from Adapter
+                            holder.itemView.getContext().startActivity(formActivityIntent);
+                        }
+                        if(item.getTitle().equals("Delete")){
                             //delete the note
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();

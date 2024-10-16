@@ -23,16 +23,6 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
 
     Button AddButton;
-    private final int requestCode = 1;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            String result = data.getStringExtra("resultKey");
-        }
-    }
 
     /** Function that manage the main activity view
      * (Display all notes, Redirect to note form and Allow to remove a note) */

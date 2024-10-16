@@ -21,6 +21,7 @@ import com.example.housenote.model.Notes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import io.realm.Realm;
 
@@ -45,15 +46,34 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
+        String noteId = getIntent().getStringExtra("noteId");
+
         mGreetingTextView = findViewById(R.id.main_textview_greeting);
         mNameEditText = findViewById(R.id.main_edittext_name);
         mPlayButton = findViewById(R.id.main_button_play);
         mAuthor = findViewById(R.id.main_edittext_author);
 
-        // Button is unavailable when any text if entered
+        // Init Realm
+        Realm.init(getApplicationContext());
+        Realm realm = Realm.getDefaultInstance();
+
+        Notes definedNote = null;
+
+        if (noteId != null) {
+            // Get note from Realm using the id
+            definedNote = realm.where(Notes.class).equalTo("id", noteId).findFirst();
+
+            if (definedNote != null) {
+                // If a note is found then fulfil the text field
+                mNameEditText.setText(definedNote.getContenu());
+                mAuthor.setText(definedNote.getUser());
+            }
+        }
+
+        // Enable button if any text is given
         mPlayButton.setEnabled(false);
 
-        // Change button accessibility depending on text
+        // Change the button accessibility if text is given
         mNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -67,31 +87,36 @@ public class FormActivity extends AppCompatActivity {
             }
         });
 
-        //Init Realm
-        Realm.init(getApplicationContext());
-        Realm realm = Realm.getDefaultInstance();
-
-        // Get data and save it as a Notes Entity
+        Notes finalExistingNote = definedNote;
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String author = mAuthor.getText().toString();
                 String description = mNameEditText.getText().toString();
                 long createdTime = System.currentTimeMillis();
 
                 realm.beginTransaction();
-                Notes new_Notes = realm.createObject(Notes.class);
-                new_Notes.setUser(author);
-                new_Notes.setContenu(description);
-                new_Notes.setDate(createdTime);
+
+                if (finalExistingNote != null) {
+                    // if we edit an existing note, update it
+                    finalExistingNote.setUser(author);
+                    finalExistingNote.setContenu(description);
+                    finalExistingNote.setDate(createdTime);
+                } else {
+                    // else create a new note
+                    Notes new_Notes = realm.createObject(Notes.class, UUID.randomUUID().toString());
+                    new_Notes.setUser(author);
+                    new_Notes.setContenu(description);
+                    new_Notes.setDate(createdTime);
+                }
+
                 realm.commitTransaction();
 
-                Toast.makeText(getApplicationContext(),"Note ajoutée",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Note enregistrée", Toast.LENGTH_SHORT).show();
 
                 finish();
             }
         });
-
     }
+
 }
