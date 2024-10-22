@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RelativeLayout; //giu
+
 
 import org.w3c.dom.Text;
 
@@ -101,6 +104,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+
+        //giu pour barrer texte à un clic
+        holder.noteLayout.setOnClickListener(new View.OnClickListener(){ //détection du clic
+            boolean isStrikeThrough = false; //état barré enregistré
+
+            @Override
+            public void onClick(View v){
+                //texte barré ou texte normal
+                if(!isStrikeThrough){
+                    holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG); //flag pour barrer le texte
+                    holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+                else {
+                    holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+
+                isStrikeThrough = !isStrikeThrough;
+            }
+        });
+
     }
 
     @Override
@@ -113,12 +137,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         TextView titleOutput;
         TextView descriptionOutput;
         TextView timeOutput;
+        RelativeLayout noteLayout; //giu (ref RelativeLayout = le bloc avec titre et comment dans item_view.xml)
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             titleOutput = itemView.findViewById(R.id.titleoutput);
             descriptionOutput = itemView.findViewById(R.id.descriptionoutput);
             timeOutput = itemView.findViewById(R.id.timeoutput);
+            noteLayout = itemView.findViewById(R.id.noteLayout); //giu
+
+
         }
     }
 }
