@@ -1,35 +1,59 @@
-# II.3510-Mobile-App-TP1
+# HouseNote
 
-The objective of this first assignment is to familiarize yourselves with Android Studio and the
-different tools that are shipped with the IDE. If you still haven't downloaded and installed
-Android Studio, you will have to do it ASAP. Android Studio can be downloaded here:
+HouseNote is a simple Android app for creating and managing notes. It supports features like changing note color, marking notes as finished, and deleting notes.
 
-https://developer.android.com/studio/
+## Table of Contents
 
-## Technical specifications
-Important: The first thing that you should do is to create an 'Empty Activity' called
-MainActivity. Be sure to check the box "Launcher Activity" when creating it. After that, you
-should be ready to work on your assignment. You have to use JAVA
-The specifications are detailed in the following section.
+### - Installation
+### - Features
+### -Code Overview
+### - Dependencies
 
-## Description of the App
-In this assignment, you will manipulate basic widgets that we have seen during the first
-lecture:
-- Button
-- TextView
-- EditText
+## Installation
 
-Your assignment consists in adding an item of each to the MainActivity, with the following
-characteristics:
+To run the app:
 
-- The EditText will take the whole width of the Activity (minus small margins) and can
-display texts spanning on several lines.
-- The Button, once clicked, should update the text of the TextView so as to display
-what was typed in the EditText.
-- The TextView should present design attributes similar to the ones of the EditText. In 
-particular, it should also be able to display text on several lines.
-The look and design of the app is not important and won't be considered when grading
-your assignment.
-### Bonus:
-1. Create Buttons to change the font color of the TextView
-2. Create Buttons to change the font size of the TextView
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Maxime-VE/II.3510-Mobile-App
+   git checkout Java-Project
+   ```
+2. Open the project in Android Studio.
+3. Build and run the app on an emulator or Android device (API 31-35).
+
+## Features
+
+- **Add Note**: Create a new note.
+- **Edit Note**: Update an existing note.
+- **Delete Note**: Remove a note.
+- **Change Note Color**: Set a background color for a note.
+- **Mark Note as Finished**: Strike through completed notes.
+
+## Code Overview
+
+- **MainActivity**: Displays the list of notes.
+- **FormActivity**: Handles adding and editing notes.
+- **Notes Model**: Represents a note with properties like content, user, date, color, and status.
+
+### Note Model
+The core of the app is the ```Notes``` model:
+```java
+public class Notes extends RealmObject {
+    @PrimaryKey
+    private String id;
+    String mContenu;
+    String mUser;
+    long mDate;
+    private int noteColor;
+    boolean isFinished;
+
+    // Getters and setters...
+}
+```
+
+## Dependencies
+
+- Realm: A local database for storing notes.
+- Android Support Libraries: Core components for the app.
+
+
