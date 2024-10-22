@@ -188,7 +188,7 @@ public class FormActivity extends AppCompatActivity {
                     new_Notes.setDate(createdTime);
                     new_Notes.setDate(createdTime);
                     new_Notes.setIsFinished(false);
-                    System.out.println(noteColor);
+                    new_Notes.setNoteColor(noteColor);
                 }
 
                 realm.commitTransaction();
