@@ -11,34 +11,30 @@ public class Notes extends RealmObject{
     String mUser;
     long mDate;
     private int noteColor;
+    boolean isFinished;
 
     public String getId() {return id;}
 
-    public String getContenu() {
-        return mContenu;
-    }
+    public String getContenu() {return mContenu;}
 
-    public String getUser() {
-        return mUser;
-    }
+    public String getUser() {return mUser;}
 
-    public long getDate() {
-        return mDate;
-    }
+    public long getDate() {return mDate;}
 
     public int getNoteColor() { return noteColor; }
 
+    public boolean getIsFinished() { return isFinished; }
+
     public void setId(String id) {this.id = id;}
 
-    public void setContenu(String contenu) {
-        mContenu = contenu;
-    }
+    public void setContenu(String contenu) {mContenu = contenu;}
 
-    public void setUser(String user) {
-        mUser = user;
-    }
+    public void setUser(String user) {mUser = user;}
 
     public void setDate(long date) { mDate = date; }
+
     public void setNoteColor(int noteColor) { this.noteColor = noteColor; }
+
+    public void setIsFinished(boolean isFinished) { this.isFinished = isFinished; }
 }
 

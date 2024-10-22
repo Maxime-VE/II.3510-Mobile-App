@@ -186,7 +186,8 @@ public class FormActivity extends AppCompatActivity {
                     new_Notes.setUser(author);
                     new_Notes.setContenu(description);
                     new_Notes.setDate(createdTime);
-                    new_Notes.setNoteColor(noteColor);
+                    new_Notes.setDate(createdTime);
+                    new_Notes.setIsFinished(false);
                     System.out.println(noteColor);
                 }
 
