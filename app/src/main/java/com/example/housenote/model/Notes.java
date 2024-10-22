@@ -1,10 +1,5 @@
 package com.example.housenote.model;
 
-import android.text.Editable;
-
-import androidx.annotation.NonNull;
-
-import java.time.LocalDate;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -15,6 +10,7 @@ public class Notes extends RealmObject{
     String mContenu;
     String mUser;
     long mDate;
+    private int noteColor;
 
     public String getId() {return id;}
 
@@ -30,6 +26,8 @@ public class Notes extends RealmObject{
         return mDate;
     }
 
+    public int getNoteColor() { return noteColor; }
+
     public void setId(String id) {this.id = id;}
 
     public void setContenu(String contenu) {
@@ -40,8 +38,7 @@ public class Notes extends RealmObject{
         mUser = user;
     }
 
-    public void setDate(long date) {
-        mDate = date;
-    }
+    public void setDate(long date) { mDate = date; }
+    public void setNoteColor(int noteColor) { this.noteColor = noteColor; }
 }
 

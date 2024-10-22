@@ -5,6 +5,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.titleOutput.setText(note.getContenu());
         String Author = note.getUser();
         Log.d("FormActivity", "Author: " + Author);
+        holder.itemView.setBackgroundColor(note.getNoteColor());
         // User name or "Unknown"
         if(!Objects.equals(Author, "")){
             holder.descriptionOutput.setText("par " + note.getUser());
