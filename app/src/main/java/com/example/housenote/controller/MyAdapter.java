@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RelativeLayout; //giu
 
+import io.realm.Realm;
+
 
 import org.w3c.dom.Text;
 
@@ -37,6 +39,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     RealmResults<Notes> notesList;
 
+
     public MyAdapter(Context context, RealmResults<Notes> notesList) {
         this.context = context;
         this.notesList = notesList;
@@ -54,13 +57,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Notes note = notesList.get(position);
         holder.titleOutput.setText(note.getContenu());
         String Author = note.getUser();
-        Log.d("FormActivity", "Author: " + Author);
         holder.itemView.setBackgroundColor(note.getNoteColor());
         // User name or "Unknown"
         if(!Objects.equals(Author, "")){
             holder.descriptionOutput.setText("par " + note.getUser());
         } else {
             holder.descriptionOutput.setText("Unknown");
+        }
+        if(note.getIsFinished()) {
+            holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
 
@@ -107,21 +116,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //giu pour barrer texte à un clic
         holder.noteLayout.setOnClickListener(new View.OnClickListener(){ //détection du clic
-            boolean isStrikeThrough = false; //état barré enregistré
 
             @Override
             public void onClick(View v){
                 //texte barré ou texte normal
-                if(!isStrikeThrough){
-                    holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG); //flag pour barrer le texte
+                Realm.init(context);
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                if(!note.getIsFinished()) {
+                    Log.d("STATE", "Deviens tiré");
+                    holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-                else {
+                    note.setIsFinished(true);
+                } else {
+                    Log.d("STATE", "Arrête tiré");
                     holder.titleOutput.setPaintFlags(holder.titleOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     holder.descriptionOutput.setPaintFlags(holder.descriptionOutput.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    note.setIsFinished(false);
                 }
-
-                isStrikeThrough = !isStrikeThrough;
+                realm.commitTransaction();
             }
         });
 
