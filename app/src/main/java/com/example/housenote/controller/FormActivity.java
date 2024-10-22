@@ -133,6 +133,10 @@ public class FormActivity extends AppCompatActivity {
 
         Notes definedNote = null;
 
+
+        // Enable button if any text is given
+        mPlayButton.setEnabled(false);
+
         if (noteId != null) {
             // Get note from Realm using the id
             definedNote = realm.where(Notes.class).equalTo("id", noteId).findFirst();
@@ -141,11 +145,10 @@ public class FormActivity extends AppCompatActivity {
                 // If a note is found then fulfil the text field
                 mNameEditText.setText(definedNote.getContenu());
                 mAuthor.setText(definedNote.getUser());
+                mPlayButton.setEnabled(true);
             }
         }
 
-        // Enable button if any text is given
-        mPlayButton.setEnabled(false);
 
         // Change the button accessibility if text is given
         mNameEditText.addTextChangedListener(new TextWatcher() {
