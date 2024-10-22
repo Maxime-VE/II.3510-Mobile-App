@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:layout_marginBottom="10dp"
-    android:background="@drawable/rounded_corner"
+    android:background="#FFFFFF"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
