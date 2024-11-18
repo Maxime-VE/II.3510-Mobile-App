@@ -8,15 +8,28 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import io.realm.Realm
+import android.content.Intent
+import io.realm.RealmResults
+import fr.isep.demokotlinv3.models.UserModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
+    // Load the Permmissions
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var isReadMediaAudioGranted = false
     private var isRecordAudioPermissionGranted = false
     private var isReadContactPermissionGranted = false
     private var isAccessCoarsePermissionGranted = false
     private var isAccessFinePermissionGranted = false
+
+    // Load the Realm components
+    private lateinit var realm: Realm
+    private lateinit var userRecyclerView: RecyclerView
+    private lateinit var userAdapter: UserAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +46,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         requestPermission()
+
+        // Start Realm transaction
+        Realm.init(this)
+        realm = Realm.getDefaultInstance()
+
+        userRecyclerView = findViewById(R.id.user_recycler_view)
+        userRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        val users: RealmResults<UserModel> = realm.where(UserModel::class.java).findAll()
+        userAdapter = UserAdapter(users)
+        userRecyclerView.adapter = userAdapter
+
+        val addButton: FloatingActionButton = findViewById(R.id.add_user_button)
+        addButton.setOnClickListener {
+            val intent = Intent(this, AddUserActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun requestPermission(){
@@ -85,6 +115,11 @@ class MainActivity : AppCompatActivity() {
         if(permissionRequest.isNotEmpty()){
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 
 }
