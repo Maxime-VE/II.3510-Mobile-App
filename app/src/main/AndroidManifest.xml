@@ -29,6 +29,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".AddUserActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 
