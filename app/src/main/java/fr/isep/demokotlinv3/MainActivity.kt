@@ -2,6 +2,7 @@ package fr.isep.demokotlinv3
 
 import android.content.pm.LauncherActivityInfo
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
@@ -12,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.Realm
 import android.content.Intent
+import android.widget.Button
+import android.widget.TextView
 import io.realm.RealmResults
 import fr.isep.demokotlinv3.models.UserModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.realm.RealmConfiguration
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,30 +46,41 @@ class MainActivity : AppCompatActivity() {
             isAccessCoarsePermissionGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: isAccessCoarsePermissionGranted
             isAccessFinePermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: isAccessFinePermissionGranted
 
+            updatePermissionTexts()
         }
-
         requestPermission()
 
+        // The following code is commented since an error
+        // (io.realm.exceptions.RealmException: UserModel is not part of the schema for this Realm)
+        // make the application crash
+
         // Start Realm transaction
-        Realm.init(this)
-        realm = Realm.getDefaultInstance()
+//        Realm.init(this)
+//        realm = Realm.getDefaultInstance()
+//
+//        userRecyclerView = findViewById(R.id.user_recycler_view)
+//        userRecyclerView.layoutManager = LinearLayoutManager(this)
+//
+//        // Get all the user element in Realm to display in the RecyclerView
+//        val users: RealmResults<UserModel> = realm.where(UserModel::class.java).findAll()
+//        userAdapter = UserAdapter(users)
+//        userRecyclerView.adapter = userAdapter
 
-        userRecyclerView = findViewById(R.id.user_recycler_view)
-        userRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        val users: RealmResults<UserModel> = realm.where(UserModel::class.java).findAll()
-        userAdapter = UserAdapter(users)
-        userRecyclerView.adapter = userAdapter
-
-        val addButton: FloatingActionButton = findViewById(R.id.add_user_button)
+        //Button to redirect to the form page
+        val addButton: Button = findViewById(R.id.add_user_button)
         addButton.setOnClickListener {
             val intent = Intent(this, AddUserActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun requestPermission(){
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
 
+    @SuppressLint("WrongViewCast", "SetTextI18n")
+    private fun requestPermission(){
         isReadMediaAudioGranted = ContextCompat.checkSelfPermission(
             this,
             Manifest.permission.READ_MEDIA_AUDIO
@@ -115,11 +129,26 @@ class MainActivity : AppCompatActivity() {
         if(permissionRequest.isNotEmpty()){
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
+
+        updatePermissionTexts()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
+    // Update UI Permission
+    private fun updatePermissionTexts() {
+        val permissionMedia: TextView = findViewById(R.id.permission_media)
+        val permissionRecordAudio: TextView = findViewById(R.id.permission_record_audio)
+        val permissionContact: TextView = findViewById(R.id.permission_contact)
+        val permissionLocation: TextView = findViewById(R.id.permission_location)
+
+        permissionMedia.text = if (isReadMediaAudioGranted) "Permission Media Granted" else "Permission Media Denied"
+        permissionRecordAudio.text = if (isRecordAudioPermissionGranted) "Permission Record Audio Granted" else "Permission Record Audio Denied"
+        permissionContact.text = if (isReadContactPermissionGranted) "Permission Contact Granted" else "Permission Contact Denied"
+        permissionLocation.text = if (isAccessCoarsePermissionGranted && isAccessFinePermissionGranted) {
+            "Permission Location Granted"
+        } else {
+            "Permission Location Denied"
+        }
     }
+
 
 }

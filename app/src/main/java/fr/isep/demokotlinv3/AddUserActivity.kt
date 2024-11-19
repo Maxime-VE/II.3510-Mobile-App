@@ -15,11 +15,11 @@ class AddUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
 
-        //Start Realm instance
+        //Start Realm transaction
         Realm.init(this)
         realm = Realm.getDefaultInstance()
 
-        //Load UI elements
+        //Get UI elements (form fields)
         val nameEditText: EditText = findViewById(R.id.edit_text_name)
         val ageEditText: EditText = findViewById(R.id.edit_text_age)
         val addButton: Button = findViewById(R.id.button_add_user)
@@ -35,6 +35,7 @@ class AddUserActivity : AppCompatActivity() {
         }
     }
 
+    //Save a new user in database with name and age
     private fun saveUser(name: String, age: Int) {
         realm.executeTransaction {
             val newUser = it.createObject(UserModel::class.java, (realm.where(UserModel::class.java).max("id")?.toInt() ?: 0) + 1)
